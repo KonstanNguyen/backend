@@ -35,12 +35,12 @@ public class AccountController {
 
     @RequestMapping(value = "{accountId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     public ResponseEntity<Account> updateAccount(@PathVariable Long accountId, @RequestBody Account account) {
-        return ResponseEntity
-                .ok(accountService.updateAccount(account));
+        return ResponseEntity.ok(accountService.updateAccount(account));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{accountId}/delete")
-    public ResponseEntity<Void> deleteAccount(@PathVariable Long accountId) {
-        return ResponseEntity.noContent().build();
+    public void deleteAccount(@PathVariable Long accountId) {
+        accountService.deleteAccount(accountId);
     }
 }
