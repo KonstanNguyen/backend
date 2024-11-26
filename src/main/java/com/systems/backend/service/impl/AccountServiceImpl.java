@@ -42,7 +42,6 @@ public class AccountServiceImpl implements AccountService {
         }
 
         updateAccount.setPassword(account.getPassword());
-        updateAccount.setRoles(account.getRoles());
 
         return accountRepository.save(account);
     }

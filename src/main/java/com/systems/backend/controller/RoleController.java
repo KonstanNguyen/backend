@@ -42,4 +42,10 @@ public class RoleController {
     public void deleteRole(@PathVariable(name = "roleId") Long accountId) {
         roleService.deleteRole(accountId);
     }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PatchMapping("{roleId}/grant/{docUserId}")
+    public void grantRole(@PathVariable(name = "roleId") Long roleId, @PathVariable(name = "docUserId") Long docUserId) {
+        roleService.grantRole(roleId, docUserId);
+    }
 }
