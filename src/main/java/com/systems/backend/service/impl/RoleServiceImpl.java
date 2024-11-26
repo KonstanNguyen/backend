@@ -35,11 +35,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role updateRole(Role role) {
-        Role checkRole = getRoleById(role.getId());
-        if (checkRole == null) {
+    public Role updateRole(Long roleId, Role role) {
+        Role updateRole = getRoleById(role.getId());
+        if (updateRole == null) {
             throw new RuntimeException("Role is not exists");
         }
+
+        updateRole.setName(role.getName());
+        updateRole.setDescription(role.getDescription());
+
         return null;
     }
 

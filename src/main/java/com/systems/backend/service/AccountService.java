@@ -10,6 +10,6 @@ public interface AccountService {
     Account getAccountById(Long id);
     List<Account> getAllAccounts();
     Account createAccount(Account account);
-    Account updateAccount(Account account);
+    Account updateAccount(Long accountId, Account account);
     void deleteAccount(Long id);
 }

@@ -35,11 +35,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account updateAccount(Account account) {
-        Account account1 = getAccountById(account.getId());
-        if (account1 == null) {
+    public Account updateAccount(Long accountId, Account account) {
+        Account updateAccount = getAccountById(accountId);
+        if (updateAccount == null) {
             throw new RuntimeException("Account is not found!");
         }
+
+        updateAccount.setPassword(account.getPassword());
+        updateAccount.setRoles(account.getRoles());
+
         return accountRepository.save(account);
     }
 
