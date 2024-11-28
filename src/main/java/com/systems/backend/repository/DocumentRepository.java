@@ -1,5 +1,6 @@
 package com.systems.backend.repository;
 
+import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-    List<Document> findByCategory(Long category);
+    List<Document> findByCategory(Category category);
     List<Document> findByAuthor(DocUser author);
     List<Document> findByTitleContaining(String keywords);
     List<Document> findByStatus(Short status);

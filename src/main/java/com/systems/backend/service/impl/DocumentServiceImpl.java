@@ -1,5 +1,6 @@
 package com.systems.backend.service.impl;
 
+import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 import com.systems.backend.repository.DocumentRepository;
@@ -23,7 +24,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> gettDocumentByCategory(Long category) {
+    public List<Document> gettDocumentByCategory(Category category) {
         return documentRepository.findByCategory(category);
     }
 

@@ -41,12 +41,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Category category) {
-        Category checkCategory = getCategoryById(category.getId());
+    public void deleteCategory(Long id) {
+        Category checkCategory = getCategoryById(id);
         if (checkCategory == null) {
             throw new RuntimeException("This category is not found");
         }
-        categoryRepository.delete(category);
+        categoryRepository.delete(checkCategory);
     }
 
     @Override

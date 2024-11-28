@@ -1,5 +1,6 @@
 package com.systems.backend.service;
 
+import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface DocumentService {
     Document getDocumentById(Long id);
-    List<Document> gettDocumentByCategory(Long category);
+    List<Document> gettDocumentByCategory(Category category);
     List<Document> getDocumentsByAuthor(DocUser author);
     List<Document> getDocumentsByStatus(Short status);
     List<Document> getDocumentsByCreateAt(LocalDateTime time);
