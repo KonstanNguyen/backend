@@ -1,6 +1,7 @@
 package com.systems.backend.controller;
 
 import com.systems.backend.model.DocUser;
+import com.systems.backend.requests.CreateDocUserRequest;
 import com.systems.backend.service.DocUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "/api/users")
+@RequestMapping(name = "/api/doc-users")
 public class DocUserController {
     @Autowired
     private DocUserService docUserService;
@@ -22,10 +23,10 @@ public class DocUserController {
     }
 
     @PostMapping
-    public ResponseEntity<DocUser> createDocUser(@RequestBody DocUser docUser) {
+    public ResponseEntity<DocUser> createDocUser(@RequestBody CreateDocUserRequest createDocUserRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(docUserService.createDocUser(docUser));
+                .body(docUserService.createDocUser(createDocUserRequest));
     }
 
     @GetMapping("{docUserId}")

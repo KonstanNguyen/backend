@@ -3,9 +3,9 @@ package com.systems.backend.service.impl;
 import com.systems.backend.model.Account;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Role;
+import com.systems.backend.repository.AccountRepository;
 import com.systems.backend.repository.RoleRepository;
-import com.systems.backend.service.AccountService;
-import com.systems.backend.service.DocUserService;
+import com.systems.backend.requests.CreateRoleRequest;
 import com.systems.backend.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
 
     @Override
     public List<Role> getAllRoles() {
@@ -35,11 +34,21 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role createRole(Role role) {
-        Role checkRole = getRoleById(role.getId());
-        if (checkRole != null) {
+    public Role findByName(String roleName) {
+        return roleRepository.findByName(roleName).orElseThrow(() ->
+                new RuntimeException("Role not found!")
+        );
+    }
+
+    @Override
+    public Role createRole(CreateRoleRequest createRoleRequest) {
+        if (roleRepository.existsByName(createRoleRequest.getName())) {
             throw new RuntimeException("Role already exists");
         }
+        Role role = Role.builder()
+                .name(createRoleRequest.getName())
+                .description(createRoleRequest.getDescription())
+                .build();
         return roleRepository.save(role);
     }
 
@@ -67,10 +76,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void grantRole(Long roleId, Long accountId) {
-        Account account = accountService.getAccountById(accountId);
-        if (account == null) {
-            throw new RuntimeException("Account is not found!");
-        }
+        Account account = accountRepository.findById(accountId).orElseThrow(() ->
+                new RuntimeException("Account not found!")
+        );
+
         Role role = getRoleById(roleId);
         if (role == null) {
             throw new RuntimeException("Role is not found!");

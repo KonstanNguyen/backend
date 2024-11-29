@@ -2,10 +2,13 @@ package com.systems.backend.service.impl;
 
 import com.systems.backend.model.DocUser;
 import com.systems.backend.repository.DocUserRepository;
+import com.systems.backend.requests.CreateDocUserRequest;
 import com.systems.backend.service.DocUserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +29,20 @@ public class DocUserServiceImpl implements DocUserService {
     }
 
     @Override
-    public DocUser createDocUser(DocUser docUser) {
-        DocUser checkDocUser = getDocUserById(docUser.getId());
-        if (checkDocUser == null) {
-            throw new RuntimeException("User not found!");
-        }
+    @Transactional
+    public DocUser createDocUser(CreateDocUserRequest createDocUserRequest) {
+//        DocUser checkDocUser = getDocUserById(createDocUserRequest.);
+//        if (checkDocUser != null) {
+//            throw new RuntimeException("User already exists");
+//        }
+        DocUser docUser = new DocUser();
+
+        docUser.setName(createDocUserRequest.getName());
+        docUser.setEmail(createDocUserRequest.getEmail());
+        docUser.setDateOfBirth(LocalDate.parse(createDocUserRequest.getBirthday()));
+        docUser.setGender(createDocUserRequest.getGender());
+        docUser.setPhone(createDocUserRequest.getPhone());
+
         return docUserRepository.save(docUser);
     }
 

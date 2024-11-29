@@ -1,10 +1,12 @@
 package com.systems.backend.controller;
 
 import com.systems.backend.model.Role;
+import com.systems.backend.requests.CreateRoleRequest;
 import com.systems.backend.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +24,10 @@ public class RoleController {
     }
 
     @PostMapping
-    public ResponseEntity<Role> createRole(@RequestBody Role role) {
+    public ResponseEntity<Role> createRole(@RequestBody CreateRoleRequest createRoleRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(roleService.createRole(role));
+                .body(roleService.createRole(createRoleRequest));
     }
 
     @GetMapping("{roleId}")
