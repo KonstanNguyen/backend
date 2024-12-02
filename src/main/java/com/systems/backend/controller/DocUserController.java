@@ -5,7 +5,6 @@ import com.systems.backend.requests.CreateDocUserRequest;
 import com.systems.backend.service.DocUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,30 +16,35 @@ public class DocUserController {
     private DocUserService docUserService;
 
     @GetMapping
-    public ResponseEntity<List<DocUser>> getAllDocUsers() {
-        List<DocUser> docUsers = docUserService.getAllDocUsers();
-        return ResponseEntity.ok(docUsers);
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<DocUser> getAllDocUsers() {
+        return docUserService.getAllDocUsers();
     }
 
     @PostMapping
-    public ResponseEntity<DocUser> createDocUser(@RequestBody CreateDocUserRequest createDocUserRequest) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(docUserService.createDocUser(createDocUserRequest));
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public DocUser createDocUser(@RequestBody CreateDocUserRequest createDocUserRequest) {
+        return docUserService.createDocUser(createDocUserRequest);
     }
 
     @GetMapping("{docUserId}")
-    public ResponseEntity<DocUser> getDocUser(@PathVariable(name = "docUserId") Long docUserId) {
-        return ResponseEntity.ok(docUserService.getDocUserById(docUserId));
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public DocUser getDocUser(@PathVariable(name = "docUserId") Long docUserId) {
+        return docUserService.getDocUserById(docUserId);
     }
 
     @RequestMapping(value = "{docUserId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
-    public ResponseEntity<DocUser> updateDocUser(@PathVariable(name = "docUserId") Long docUserId, @RequestBody DocUser docUser) {
-        return ResponseEntity.ok(docUserService.updateDocUser(docUserId, docUser));
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public DocUser updateDocUser(@PathVariable(name = "docUserId") Long docUserId, @RequestBody DocUser docUser) {
+        return docUserService.updateDocUser(docUserId, docUser);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{docUserId}/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDocUser(@PathVariable(name = "docUserId") Long accountId) {
         docUserService.deleteDocUser(accountId);
     }

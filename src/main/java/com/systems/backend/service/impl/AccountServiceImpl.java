@@ -5,9 +5,10 @@ import com.systems.backend.model.Account;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Role;
 import com.systems.backend.repository.AccountRepository;
-import com.systems.backend.repository.DocUserRepository;
 import com.systems.backend.repository.RoleRepository;
+import com.systems.backend.requests.LoginRequest;
 import com.systems.backend.requests.RegisterRequest;
+import com.systems.backend.responses.LoginResponse;
 import com.systems.backend.responses.RegisterResponse;
 import com.systems.backend.security.JwtGenerator;
 import com.systems.backend.service.AccountService;
@@ -17,7 +18,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +38,6 @@ public class AccountServiceImpl implements AccountService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private DocUserRepository docUserRepository;
-
-    @Autowired
     private JwtGenerator jwtGenerator;
 
     @Autowired
@@ -52,8 +50,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountById(Long id) {
-        Optional<Account> accountOptional = accountRepository.findById(id);
-        return accountOptional.orElseThrow(() ->
+        return accountRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Account not found")
         );
     }
@@ -71,26 +68,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account createAccount(RegisterRequest registerRequest) {
+    public Account createAccount(Account account) {
+        if (existsByUsername(account.getUsername())) {
+            throw new RuntimeException("Account with username " + account.getUsername() + " already exists");
+        }
 
-
-        Account account = Account.builder()
-                .username(registerRequest.getUsername())
-                .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .user(
-                        DocUser.builder()
-                                .name(registerRequest.getUsername())
-                                .email(registerRequest.getEmail())
-                                .phone(registerRequest.getPhone())
-                                .dateOfBirth(LocalDate.parse(registerRequest.getBirthday()))
-                                .gender(registerRequest.getGender())
-                                .build()
-                )
-                .build();
-
-        Role userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-        account.setRoles(List.of(userRole));
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
 
         return accountRepository.save(account);
     }
@@ -115,6 +98,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public RegisterResponse registerAccount(RegisterRequest registerRequest) {
+        if (existsByUsername(registerRequest.getUsername())) {
+            throw new RuntimeException("Account with username " + registerRequest.getUsername() + " already exists");
+        }
+
         DocUser docUser = DocUser.builder()
                 .name(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
@@ -137,6 +124,9 @@ public class AccountServiceImpl implements AccountService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(registerRequest.getUsername(), registerRequest.getPassword())
         );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         String token = jwtGenerator.generateToken(authentication);
 
         return RegisterResponse.builder()
@@ -145,4 +135,23 @@ public class AccountServiceImpl implements AccountService {
                 .expiresIn(JwtConstants.EXPIRATION_TIME)
                 .build();
     }
+
+    @Override
+    public LoginResponse loginAccount(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtGenerator.generateToken(authentication);
+
+        return LoginResponse.builder()
+                .username(loginRequest.getUsername())
+                .token(token)
+                .expiresIn(JwtConstants.EXPIRATION_TIME)
+                .build();
+    }
+
+
 }

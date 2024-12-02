@@ -5,8 +5,6 @@ import com.systems.backend.requests.CreateRoleRequest;
 import com.systems.backend.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,30 +16,35 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> accounts = roleService.getAllRoles();
-        return ResponseEntity.ok(accounts);
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Role> getAllRoles() {
+        return roleService.getAllRoles();
     }
 
     @PostMapping
-    public ResponseEntity<Role> createRole(@RequestBody CreateRoleRequest createRoleRequest) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(roleService.createRole(createRoleRequest));
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public Role createRole(@RequestBody CreateRoleRequest createRoleRequest) {
+        return roleService.createRole(createRoleRequest);
     }
 
     @GetMapping("{roleId}")
-    public ResponseEntity<Role> getRole(@PathVariable(name = "roleId") Long roleId) {
-        return ResponseEntity.ok(roleService.getRoleById(roleId));
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Role getRole(@PathVariable(name = "roleId") Long roleId) {
+        return roleService.getRoleById(roleId);
     }
 
     @RequestMapping(value = "{roleId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
-    public ResponseEntity<Role> updateRole(@PathVariable(name = "roleId") Long roleId, @RequestBody Role role) {
-        return ResponseEntity.ok(roleService.updateRole(roleId, role));
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public Role updateRole(@PathVariable(name = "roleId") Long roleId, @RequestBody Role role) {
+        return roleService.updateRole(roleId, role);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{roleId}/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRole(@PathVariable(name = "roleId") Long accountId) {
         roleService.deleteRole(accountId);
     }
