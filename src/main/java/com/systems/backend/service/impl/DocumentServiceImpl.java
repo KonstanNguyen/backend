@@ -4,6 +4,7 @@ import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 import com.systems.backend.repository.DocumentRepository;
+import com.systems.backend.request.CreateDocumentRequest;
 import com.systems.backend.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,11 +55,17 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document createDocument(Document document) {
-        Document checkDocument = getDocumentById(document.getId());
-        if (checkDocument != null) {
-            throw new RuntimeException("Document has already existed!");
+    public Document createDocument(CreateDocumentRequest createDocumentRequest) {
+        if (documentRepository.existsByTitle(createDocumentRequest.getTitle())) {
+            throw new RuntimeException("This document has already existed");
         }
+
+        Document document = Document.builder()
+                .title(createDocumentRequest.getTitle())
+                .author(createDocumentRequest.getAuthor())
+                .thumbnail(createDocumentRequest.getThumbnail())
+                .content(createDocumentRequest.getContent())
+                .build();
         return documentRepository.save(document);
     }
 

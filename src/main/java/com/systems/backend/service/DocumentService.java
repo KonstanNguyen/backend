@@ -3,6 +3,7 @@ package com.systems.backend.service;
 import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
+import com.systems.backend.request.CreateDocumentRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface DocumentService {
     List<Document> getDocumentsByCreateAt(LocalDateTime time);
     List<Document> searchDocuments(String keywords);
     List<Document> getAllDocuments();
-    Document createDocument(Document document);
+    Document createDocument(CreateDocumentRequest createDocumentRequest);
     void deleteDocument(Long id);
     Document updateDocument(Long id, Document document);
 }

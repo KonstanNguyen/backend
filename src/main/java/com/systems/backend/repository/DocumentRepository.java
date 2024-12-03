@@ -18,5 +18,5 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findByTitleContaining(String keywords);
     List<Document> findByStatus(Short status);
     List<Document> findByCreateAt(LocalDateTime createAt);
-    
+    Boolean existsByTitle(String title);
 }

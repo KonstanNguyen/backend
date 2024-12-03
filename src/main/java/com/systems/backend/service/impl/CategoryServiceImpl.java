@@ -2,6 +2,7 @@ package com.systems.backend.service.impl;
 
 import com.systems.backend.model.Category;
 import com.systems.backend.repository.CategoryRepository;
+import com.systems.backend.request.CreateCategoryRequest;
 import com.systems.backend.service.CategoryService;
 
 import java.util.List;
@@ -32,12 +33,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category createCategory(Category category) {
-        Category checkCategory = getCategoryById(category.getId());
-        if (checkCategory != null) {
-            throw new RuntimeException("This category is already existed");
+    public Category createCategory(CreateCategoryRequest createCategoryRequest) {
+        if (categoryRepository.findByName(createCategoryRequest.getName()) != null) {
+            throw new RuntimeException("This category has already existed");
         }
-        return categoryRepository.save(category);
+        Category role = Category.builder()
+                .name(createCategoryRequest.getName())
+                .description(createCategoryRequest.getDescription())
+                .build();
+        return categoryRepository.save(role);
     }
 
     @Override

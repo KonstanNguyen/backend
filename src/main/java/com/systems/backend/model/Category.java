@@ -1,15 +1,15 @@
 package com.systems.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
-@Getter
-@Setter
+import java.util.Collection;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Category {
     @Id
@@ -24,4 +24,6 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private Collection<Document> documents;
 }
