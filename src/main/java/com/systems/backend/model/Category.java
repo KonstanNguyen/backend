@@ -1,12 +1,12 @@
 package com.systems.backend.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
+
+import javax.print.Doc;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -24,4 +24,6 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private Collection<Document> documents;
 }
