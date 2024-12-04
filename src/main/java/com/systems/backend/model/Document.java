@@ -15,6 +15,7 @@ import java.util.Collection;
 @Entity
 public class Document {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "document_id", nullable = false)
     private Long id;
 
@@ -52,4 +53,7 @@ public class Document {
 
     @OneToMany(mappedBy = "historyDownloadId.document", fetch = FetchType.LAZY)
     private Collection<HistoryDownload> historyDownloads;
+
+    @OneToMany(mappedBy = "ratingId.document", fetch = FetchType.LAZY)
+    private Collection<Rating> ratings;
 }

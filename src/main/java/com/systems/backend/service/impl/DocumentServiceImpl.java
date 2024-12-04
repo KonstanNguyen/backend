@@ -3,12 +3,15 @@ package com.systems.backend.service.impl;
 import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
+import com.systems.backend.repository.CategoryRepository;
+import com.systems.backend.repository.DocUserRepository;
 import com.systems.backend.repository.DocumentRepository;
 import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +22,12 @@ import java.util.Optional;
 public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DocumentRepository documentRepository;
+
+    @Autowired
+    private DocUserRepository docUserRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
     public Document getDocumentById(Long id) {
@@ -62,9 +71,15 @@ public class DocumentServiceImpl implements DocumentService {
             throw new RuntimeException("This document has already existed");
         }
 
+        DocUser author = docUserRepository.findById(createDocumentRequest.getAuthorId()).orElseThrow(() -> new ResourceNotFoundException("Not found user by ID" + createDocumentRequest.getAuthorId())) ;
+        Category category = categoryRepository.findById(createDocumentRequest.getCategoryId()).orElseThrow(() -> new ResourceNotFoundException("Not found category by ID" + createDocumentRequest.getCategoryId()));
+
         Document document = Document.builder()
+                .status(createDocumentRequest.getStatus())
                 .title(createDocumentRequest.getTitle())
-                .author(createDocumentRequest.getAuthor())
+                .createAt(LocalDateTime.now())
+                .author(author)
+                .category(category)
                 .thumbnail(createDocumentRequest.getThumbnail())
                 .content(createDocumentRequest.getContent())
                 .build();
