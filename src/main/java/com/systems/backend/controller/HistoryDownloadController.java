@@ -30,7 +30,7 @@ public class HistoryDownloadController {
     @GetMapping
     public ResponseEntity<List<HistoryDownload>> getAllHistoryDownloads() {
         try {
-            List<HistoryDownload> historyDownloads = historyDownloadService.findAll();
+            List<HistoryDownload> historyDownloads = historyDownloadService.getAllHistoryDownloads();
             return ResponseEntity.ok(historyDownloads);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -38,25 +38,26 @@ public class HistoryDownloadController {
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<List<HistoryDownload>> getHistoryByAccountId(@PathVariable Long accountId) {
-        try {
-            List<HistoryDownload> historyDownloads = historyDownloadService.findByAccountId(accountId);
-            if (historyDownloads.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-            }
-            return ResponseEntity.ok(historyDownloads);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    public ResponseEntity<List<HistoryDownload>> getHistoryByUsername(@PathVariable String username) {
+//        try {
+//            List<HistoryDownload> historyDownloads = historyDownloadService.getHistoryByAccountId(accountId);
+//            if (historyDownloads.isEmpty()) {
+//                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+//            }
+//            return ResponseEntity.ok(historyDownloads);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+        return ResponseEntity.ok(historyDownloadService.getHistoryByAccountId(username));
     }
 
-    @GetMapping("/top")
-    public ResponseEntity<?> getTopDownloadedDocuments(@RequestParam int limit) {
-        try {
-            List<Object[]> topDownloads = historyDownloadService.findTopDownloadedDocuments(limit);
-            return ResponseEntity.ok(topDownloads);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving top downloads");
-        }
-    }
+//    @GetMapping("/top")
+//    public ResponseEntity<?> getTopDownloadedDocuments(@RequestParam int limit) {
+//        try {
+//            List<Object[]> topDownloads = historyDownloadService.findTopDownloadedDocuments(limit);
+//            return ResponseEntity.ok(topDownloads);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving top downloads");
+//        }
+//    }
 }

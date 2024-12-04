@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Data
 @Builder
@@ -49,4 +50,6 @@ public class Document {
     @Column(name = "update_at", nullable = false)
     private LocalDateTime updateAt;
 
+    @OneToMany(mappedBy = "historyDownloadId.document", fetch = FetchType.LAZY)
+    private Collection<HistoryDownload> historyDownloads;
 }

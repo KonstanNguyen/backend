@@ -15,41 +15,37 @@ import java.util.Objects;
 @Entity
 @Table(name = "History_Download")
 public class HistoryDownload {
-    @Getter
-    @Setter
     @Embeddable
     public static class HistoryDownloadId implements java.io.Serializable {
         @Serial
         private static final long serialVersionUID = 7789561099938143923L;
-        @Column(name = "account_id", nullable = false)
-        private Long accountId;
 
-        @Column(name = "document_id", nullable = false)
-        private Long documentId;
+        @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+        @JoinColumn(name = "account_id")
+        protected Account account;
+
+        @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+        @JoinColumn(name = "document_id")
+        protected Document document;
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
             HistoryDownloadId entity = (HistoryDownloadId) o;
-            return Objects.equals(this.accountId, entity.accountId) &&
-                    Objects.equals(this.documentId, entity.documentId);
+            return Objects.equals(this.account, entity.account) &&
+                    Objects.equals(this.document, entity.document);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(accountId, documentId);
+            return Objects.hash(account, document);
         }
 
     }
 
     @EmbeddedId
-    private HistoryDownloadId id;
-
-    @MapsId("accountId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    private HistoryDownloadId historyDownloadId;
 
     @Column(name = "date", nullable = false)
     private LocalDateTime date;

@@ -9,7 +9,7 @@ public interface HistoryDownloadService {
     
     List<HistoryDownload> getAllHistoryDownloads();
 
-    List<HistoryDownload> getHistoryByAccountId(Long accountId);
+    List<HistoryDownload> getHistoryByAccountId(String username);
 
     List<HistoryDownload> getHistoryByDocumentId(Long documentId);
 }

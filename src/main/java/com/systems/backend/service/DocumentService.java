@@ -8,6 +8,8 @@ import com.systems.backend.requests.CreateDocumentRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +20,7 @@ public interface DocumentService {
     List<Document> getDocumentsByStatus(Short status);
     List<Document> getDocumentsByCreateAt(LocalDateTime time);
     List<Document> searchDocuments(String keywords);
-    List<Document> getAllDocuments();
+    Page<Document> getAllDocuments(Pageable pageable);
     Document createDocument(CreateDocumentRequest createDocumentRequest);
     void deleteDocument(Long id);
     Document updateDocument(Long id, Document document);

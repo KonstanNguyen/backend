@@ -36,4 +36,7 @@ public class Account {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
+
+    @OneToMany(mappedBy = "historyDownloadId.account", fetch = FetchType.LAZY)
+    private Collection<HistoryDownload> historyDownloads;
 }

@@ -43,7 +43,7 @@ public class CategoryController {
     }
 
 
-    @GetMapping("categoryId")
+    @GetMapping("{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Category getCategory(@PathVariable(name="categoryId") Long categoryId) {
@@ -51,7 +51,7 @@ public class CategoryController {
     }
 
 
-    @RequestMapping(value="{categoryId/update}", method ={RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
+    @RequestMapping(value="{categoryId}/update", method ={RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Category updateCategory(@PathVariable(name = "categoryId") Long categoryId, @RequestBody Category Category) {

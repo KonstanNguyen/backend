@@ -40,6 +40,7 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
+                            .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()

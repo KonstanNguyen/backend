@@ -7,20 +7,15 @@ import com.systems.backend.service.DocumentService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/documents")
+@RequestMapping("api/documents")
 public class DocumentController {
     @Autowired
     private DocumentService documentService;
@@ -28,8 +23,8 @@ public class DocumentController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<Document> getAllDocuments() {
-        return documentService.getAllDocuments();
+    public Page<Document> getAllDocuments(@RequestBody(required = false) PageRequest pageRequest) {
+        return documentService.getAllDocuments(pageRequest);
     }
 
     @PostMapping
@@ -42,22 +37,22 @@ public class DocumentController {
     @GetMapping("{documentId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Document getDocument(@PathVariable(name="documentId") Long documentId) {
+    public Document getDocument(@PathVariable(name = "documentId") Long documentId) {
         return documentService.getDocumentById(documentId);
     }
 
-    @RequestMapping(value = "{documentId}/update", method={RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
+    @RequestMapping(value = "{documentId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Document updateDocument(@PathVariable(name = "documentId") Long documentId, @RequestBody Document document) {
         return documentService.updateDocument(documentId, document);
     }
-    
+
 
     @DeleteMapping("{documentId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDocument(@PathVariable(name = "documentId") Long documentId) {
         documentService.deleteDocument(documentId);
     }
-    
+
 }

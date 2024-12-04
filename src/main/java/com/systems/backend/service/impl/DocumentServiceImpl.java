@@ -7,6 +7,8 @@ import com.systems.backend.repository.DocumentRepository;
 import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,8 +52,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> getAllDocuments() {
-        return documentRepository.findAll();
+    public Page<Document> getAllDocuments(Pageable pageable) {
+        return documentRepository.findAll(pageable);
     }
 
     @Override
