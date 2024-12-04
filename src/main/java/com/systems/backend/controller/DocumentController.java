@@ -2,9 +2,8 @@ package com.systems.backend.controller;
 
 import com.systems.backend.model.Document;
 import com.systems.backend.requests.CreateDocumentRequest;
+import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.service.DocumentService;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,12 +18,18 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentController {
     @Autowired
     private DocumentService documentService;
-
+    
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Page<Document> getAllDocuments(@RequestBody(required = false) PageRequest pageRequest) {
-        return documentService.getAllDocuments(pageRequest);
+    public Page<Document> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
+        int page = pageRequest.getPage() >= 0 ? pageRequest.getPage() : 0;
+        int size = pageRequest.getSize() >= 1 ? pageRequest.getSize() : 3;
+        String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "title";
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        return documentService.getAllDocuments(pageable);
     }
 
     @PostMapping

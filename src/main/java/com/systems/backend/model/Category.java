@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
+
 import java.util.Collection;
 
 @Data
@@ -23,7 +24,7 @@ public class Category {
     @Nationalized
     @Column(name = "name", nullable = false)
     private String name;
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private Collection<Document> documents;
 }

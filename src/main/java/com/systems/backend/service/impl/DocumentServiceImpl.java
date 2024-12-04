@@ -78,6 +78,7 @@ public class DocumentServiceImpl implements DocumentService {
                 .status(createDocumentRequest.getStatus())
                 .title(createDocumentRequest.getTitle())
                 .createAt(LocalDateTime.now())
+                .updateAt(LocalDateTime.now())
                 .author(author)
                 .category(category)
                 .thumbnail(createDocumentRequest.getThumbnail())
