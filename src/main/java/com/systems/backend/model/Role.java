@@ -1,18 +1,21 @@
 package com.systems.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
 import java.util.Collection;
 
-@Getter
-@Setter
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
     @Id
-    @Column(name = "role_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "role_id")
     private Long id;
 
     @Nationalized
@@ -23,10 +26,7 @@ public class Role {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "Account_Role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "account_id"))
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Collection<Account> accounts;
 }
