@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.systems.backend.model.Category;
-import com.systems.backend.request.CreateCategoryRequest;
+import com.systems.backend.requests.CreateCategoryRequest;
 import com.systems.backend.service.CategoryService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;

@@ -1,4 +1,4 @@
-package com.systems.backend.request;
+package com.systems.backend.requests;
 
 import com.systems.backend.model.DocUser;
 

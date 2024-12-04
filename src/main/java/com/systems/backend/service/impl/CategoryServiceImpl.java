@@ -2,7 +2,7 @@ package com.systems.backend.service.impl;
 
 import com.systems.backend.model.Category;
 import com.systems.backend.repository.CategoryRepository;
-import com.systems.backend.request.CreateCategoryRequest;
+import com.systems.backend.requests.CreateCategoryRequest;
 import com.systems.backend.service.CategoryService;
 
 import java.util.List;

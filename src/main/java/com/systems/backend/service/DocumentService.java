@@ -3,7 +3,7 @@ package com.systems.backend.service;
 import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
-import com.systems.backend.request.CreateDocumentRequest;
+import com.systems.backend.requests.CreateDocumentRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -4,7 +4,7 @@ import com.systems.backend.model.Category;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 import com.systems.backend.repository.DocumentRepository;
-import com.systems.backend.request.CreateDocumentRequest;
+import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
