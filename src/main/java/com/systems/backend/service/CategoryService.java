@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.systems.backend.model.Category;
-import com.systems.backend.request.CreateCategoryRequest;
+import com.systems.backend.requests.CreateCategoryRequest;
 
 @Service
 public interface CategoryService {
