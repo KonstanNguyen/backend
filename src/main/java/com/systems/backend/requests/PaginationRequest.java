@@ -1,45 +1,15 @@
 package com.systems.backend.requests;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaginationRequest {
-    private int page = 0;    // Trang, mặc định là 0
-    private int size = 10;   // Kích thước trang, mặc định là 10
-    private String sortBy = "id"; // Sắp xếp theo trường "id", mặc định
-    private String sortDirection = "asc";
-
-    // Getter và Setter
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public String getSortBy() {
-        return sortBy;
-    }
-
-    public void setSortBy(String sortBy) {
-        this.sortBy = sortBy;
-    }
-
-    
-    public String getSortDirection() {
-        return sortDirection;
-    }
-
-    public void setSortDirection(String sortDirection) {
-        this.sortDirection = sortDirection;
-    }
+    private int page;    
+    private int size;   
+    private String sortBy; 
+    private String sortDirection;
 }
