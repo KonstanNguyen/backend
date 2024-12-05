@@ -25,9 +25,12 @@ public class DocumentController {
     public Page<Document> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
         int page = pageRequest.getPage() >= 0 ? pageRequest.getPage() : 0;
         int size = pageRequest.getSize() >= 1 ? pageRequest.getSize() : 3;
-        String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "title";
+        String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
+        String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+        
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         return documentService.getAllDocuments(pageable);
     }

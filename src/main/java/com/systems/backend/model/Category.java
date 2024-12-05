@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Nationalized;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @Data
@@ -12,7 +15,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Category {
+public class Category implements Serializable {
     @Id
     @Column(name = "category_id", nullable = false)
     private Long id;
@@ -25,6 +28,7 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
     
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Collection<Document> documents;
 }

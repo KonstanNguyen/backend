@@ -7,6 +7,7 @@ public class PaginationRequest {
     private int page = 0;    // Trang, mặc định là 0
     private int size = 10;   // Kích thước trang, mặc định là 10
     private String sortBy = "id"; // Sắp xếp theo trường "id", mặc định
+    private String sortDirection = "asc";
 
     // Getter và Setter
     public int getPage() {
@@ -31,5 +32,14 @@ public class PaginationRequest {
 
     public void setSortBy(String sortBy) {
         this.sortBy = sortBy;
+    }
+
+    
+    public String getSortDirection() {
+        return sortDirection;
+    }
+
+    public void setSortDirection(String sortDirection) {
+        this.sortDirection = sortDirection;
     }
 }

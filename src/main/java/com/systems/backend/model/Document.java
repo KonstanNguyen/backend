@@ -5,6 +5,9 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -52,8 +55,10 @@ public class Document {
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "historyDownloadId.document", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Collection<HistoryDownload> historyDownloads;
 
     @OneToMany(mappedBy = "ratingId.document", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Collection<Rating> ratings;
 }
