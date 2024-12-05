@@ -12,6 +12,7 @@ import com.systems.backend.model.Category;
 import com.systems.backend.requests.CreateCategoryRequest;
 import com.systems.backend.service.CategoryService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired

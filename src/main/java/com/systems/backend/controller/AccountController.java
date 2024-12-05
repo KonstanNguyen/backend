@@ -7,11 +7,13 @@ import com.systems.backend.responses.ApiResponse;
 import com.systems.backend.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/accounts")
 public class AccountController {
     @Autowired
@@ -38,13 +40,13 @@ public class AccountController {
         return accountService.getAccountById(accountId);
     }
 
-    @RequestMapping(value = "{accountId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
+    @RequestMapping(value = "{accountId}/update", method = { RequestMethod.PUT, RequestMethod.POST,
+            RequestMethod.PATCH })
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Account updateAccount(
             @PathVariable(name = "accountId") Long accountId,
-            @RequestBody Account account
-    ) {
+            @RequestBody Account account) {
         return accountService.updateAccount(accountId, account);
     }
 
@@ -65,7 +67,7 @@ public class AccountController {
                 .build();
     }
 
-    @PostMapping("register")
+    @RequestMapping(value = "register", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ApiResponse<Object> registerAccount(@RequestBody RegisterRequest registerRequest) {
@@ -76,14 +78,14 @@ public class AccountController {
                 .build();
     }
 
-//    @PostMapping("/logout")
-//    @ResponseStatus(HttpStatus.OK)
-//    @ResponseBody
-//    public ApiResponse<?> logout() {
-//
-//        return ApiResponse.builder()
-//                .message("Logout successful")
-//                .code(HttpStatus.OK.value())
-//                .build();
-//    }
+    // @PostMapping("/logout")
+    // @ResponseStatus(HttpStatus.OK)
+    // @ResponseBody
+    // public ApiResponse<?> logout() {
+    //
+    // return ApiResponse.builder()
+    // .message("Logout successful")
+    // .code(HttpStatus.OK.value())
+    // .build();
+    // }
 }
