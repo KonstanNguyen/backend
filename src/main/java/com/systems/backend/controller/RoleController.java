@@ -32,14 +32,14 @@ public class RoleController {
     @GetMapping("{roleId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Role getRole(@PathVariable(name = "roleId") Long roleId) {
+    public Role getRole(@PathVariable Long roleId) {
         return roleService.getRoleById(roleId);
     }
 
     @RequestMapping(value = "{roleId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Role updateRole(@PathVariable(name = "roleId") Long roleId, @RequestBody Role role) {
+    public Role updateRole(@PathVariable Long roleId, @RequestBody Role role) {
         return roleService.updateRole(roleId, role);
     }
 

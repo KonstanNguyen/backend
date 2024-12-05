@@ -23,8 +23,13 @@ public class DocumentController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Page<Document> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
-        int page = pageRequest.getPage() >= 0 ? pageRequest.getPage() : 0;
-        int size = pageRequest.getSize() >= 1 ? pageRequest.getSize() : 3;
+        if(pageRequest == null) {
+            Pageable pageable = PageRequest.of(0, 6);
+            return documentService.getAllDocuments(pageable);
+        }
+
+        int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
+        int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 3;
         String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
         String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
         

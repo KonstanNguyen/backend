@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -48,17 +49,17 @@ public class Document {
 
     @ColumnDefault("getdate()")
     @Column(name = "create_at", nullable = false)
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime createAt;
 
     @ColumnDefault("getdate()")
     @Column(name = "update_at", nullable = false)
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "historyDownloadId.document", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Collection<HistoryDownload> historyDownloads;
 
     @OneToMany(mappedBy = "ratingId.document", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Collection<Rating> ratings;
 }
