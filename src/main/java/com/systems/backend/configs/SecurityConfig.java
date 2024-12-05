@@ -66,15 +66,6 @@ public class SecurityConfig {
                     // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
                     // .anyRequest()
                     // .authenticated();
-                    // .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
-                    // .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
-                    // .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
-                    // .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()
-                    // .requestMatchers(HttpMethod.DELETE, "/api/accounts/**").permitAll()
-                    // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
-                    // .requestMatchers(HttpMethod.GET,"/api/documents/**").permitAll()
-                    // .anyRequest()
-                    // .authenticated();
                 })
                 // .authenticationProvider(authenticationProvider())
                 .httpBasic(AbstractHttpConfigurer::disable);
@@ -108,22 +99,6 @@ public class SecurityConfig {
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
     }
-
-    /*
-
-                .cors(t -> {
-                    t.configurationSource(request -> {
-                        CorsConfiguration cfg = new CorsConfiguration();
-                        cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:4200", "http://localhost:5173"));
-                        cfg.setAllowedMethods(Collections.singletonList("*"));
-                        cfg.setAllowCredentials(true);
-                        cfg.setAllowedHeaders(Collections.singletonList("*"));
-                        cfg.setExposedHeaders(List.of("Authorization"));
-                        cfg.setMaxAge(3600L);
-                        return cfg;
-                    });
-                })
-     */
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
