@@ -81,6 +81,15 @@ public class SecurityConfig {
                     // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
                     // .anyRequest()
                     // .authenticated();
+                            // .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
+                            // .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.DELETE, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
+                            // .requestMatchers(HttpMethod.GET,"/api/documents/**").permitAll()
+                            // .anyRequest()
+                            // .authenticated();
                 })
                 // .authenticationProvider(authenticationProvider())
                 .httpBasic(AbstractHttpConfigurer::disable);

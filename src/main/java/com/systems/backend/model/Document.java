@@ -5,6 +5,9 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 
@@ -15,9 +18,10 @@ import java.util.Collection;
 @Entity
 public class Document {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "document_id", nullable = false)
     private Long id;
-
+    
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
@@ -51,5 +55,10 @@ public class Document {
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "historyDownloadId.document", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Collection<HistoryDownload> historyDownloads;
+
+    @OneToMany(mappedBy = "ratingId.document", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Collection<Rating> ratings;
 }
