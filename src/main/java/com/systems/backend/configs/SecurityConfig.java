@@ -47,24 +47,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                // .cors(null)
-                //     t.configurationSource(new CorsConfigurationSource(){
-                //     @Override
-                //     public CorsConfiguration getCorsConfiguration(){
-                //     CorsConfiguration config = new CorsConfiguration();
-                //     config.setAllowedOrigins(Arrays.asList("*"));
-                //     config.setAllowedMethods(Arrays.asList("*"));
-                //     config.setAllowedHeaders(Arrays.asList("*"));
-                //     config.setMaxAge(JwtConstants.EXPIRATION_TIME);
-                //     config.setAllowCredentials(true);
-
-                //     UrlBasedCorsConfigurationSource source = new
-                //     UrlBasedCorsConfigurationSource();
-                //     source.registerCo
-                //     return config;
-                //     }
-                //     });
-                // })
+                .cors(httpSecurityCorsConfigurer -> {
+                    httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
+                })
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
                     httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthEntryPoint);
                 })
@@ -81,15 +66,15 @@ public class SecurityConfig {
                     // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
                     // .anyRequest()
                     // .authenticated();
-                            // .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
-                            // .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
-                            // .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
-                            // .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()
-                            // .requestMatchers(HttpMethod.DELETE, "/api/accounts/**").permitAll()
-                            // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
-                            // .requestMatchers(HttpMethod.GET,"/api/documents/**").permitAll()
-                            // .anyRequest()
-                            // .authenticated();
+                    // .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
+                    // .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
+                    // .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
+                    // .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()
+                    // .requestMatchers(HttpMethod.DELETE, "/api/accounts/**").permitAll()
+                    // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
+                    // .requestMatchers(HttpMethod.GET,"/api/documents/**").permitAll()
+                    // .anyRequest()
+                    // .authenticated();
                 })
                 // .authenticationProvider(authenticationProvider())
                 .httpBasic(AbstractHttpConfigurer::disable);
@@ -124,19 +109,35 @@ public class SecurityConfig {
         return new JWTAuthenticationFilter();
     }
 
-    // @Bean
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration config = new CorsConfiguration();
-    //     config.setAllowedOrigins(Arrays.asList("*"));
-    //     config.setAllowedMethods(Arrays.asList("*"));
-    //     config.setAllowedHeaders(Arrays.asList("*"));
-    //     config.setMaxAge(JwtConstants.EXPIRATION_TIME);
-    //     config.setAllowCredentials(true);
+    /*
 
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", config);
-    //     return source;
-    // }
+                .cors(t -> {
+                    t.configurationSource(request -> {
+                        CorsConfiguration cfg = new CorsConfiguration();
+                        cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:4200", "http://localhost:5173"));
+                        cfg.setAllowedMethods(Collections.singletonList("*"));
+                        cfg.setAllowCredentials(true);
+                        cfg.setAllowedHeaders(Collections.singletonList("*"));
+                        cfg.setExposedHeaders(List.of("Authorization"));
+                        cfg.setMaxAge(3600L);
+                        return cfg;
+                    });
+                })
+     */
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        config.setAllowedOrigins(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowCredentials(false);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
 
     @Bean
     public ObjectMapper objectMapper() {

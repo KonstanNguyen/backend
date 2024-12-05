@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/upload")
 public class UploadController {
     @Autowired
