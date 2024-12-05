@@ -1,6 +1,7 @@
 package com.systems.backend.service.impl;
 
 import com.systems.backend.service.UploadService;
+import com.systems.backend.utils.UploadResult;
 import org.springframework.stereotype.Service;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -14,7 +15,7 @@ import java.io.FileOutputStream;
 @Service
 public class UploadServiceImpl implements UploadService {
     @Override
-    public String processFile(MultipartFile file) throws Exception {
+    public UploadResult processFile(MultipartFile file) throws Exception {
         String uploadDir = "uploads/";
         File folder = new File(uploadDir);
         if (!folder.exists()) {
@@ -37,6 +38,6 @@ public class UploadServiceImpl implements UploadService {
 
         document.close();
 
-        return thumbnailPath;
+        return new UploadResult(filePath, thumbnailPath);
     }
 }
