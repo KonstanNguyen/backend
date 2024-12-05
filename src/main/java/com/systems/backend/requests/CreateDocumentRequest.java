@@ -1,6 +1,6 @@
 package com.systems.backend.requests;
 
-import com.systems.backend.model.DocUser;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -12,12 +12,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateDocumentRequest {
+    @NotBlank(message = "Status is required!")
+    private Short status;
+    private LocalDateTime creaetAt;
+    private LocalDateTime updateAt;
     @NotBlank(message = "Thumbnail is required!")
     private String thumbnail;
     @NotBlank(message = "Title is required!")
     private String title;
     @NotBlank(message = "Author is required!")
-    private DocUser author;
+    private Long authorId;
+    @NotBlank(message = "Category is required!")
+    private Long categoryId;
     @NotBlank(message = "Content is required!")
     private String content;
 }

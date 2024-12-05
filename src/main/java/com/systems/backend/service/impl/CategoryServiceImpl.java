@@ -34,10 +34,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category createCategory(CreateCategoryRequest createCategoryRequest) {
-        if (categoryRepository.findByName(createCategoryRequest.getName()) != null) {
+        if (categoryRepository.existsByName(createCategoryRequest.getName())) {
             throw new RuntimeException("This category has already existed");
         }
         Category role = Category.builder()
+                .id(createCategoryRequest.getCategoryId())
                 .name(createCategoryRequest.getName())
                 .description(createCategoryRequest.getDescription())
                 .build();

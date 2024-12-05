@@ -12,6 +12,7 @@ import java.util.Collection;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +40,7 @@ public class Account {
 
     @OneToMany(mappedBy = "historyDownloadId.account", fetch = FetchType.LAZY)
     private Collection<HistoryDownload> historyDownloads;
+
+    @OneToMany(mappedBy = "ratingId.account", fetch = FetchType.LAZY)
+    private Collection<Rating> ratings;
 }

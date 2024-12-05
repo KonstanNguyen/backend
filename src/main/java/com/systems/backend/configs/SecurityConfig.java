@@ -1,5 +1,8 @@
 package com.systems.backend.configs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.systems.backend.security.CustomUserDetailsService;
 import com.systems.backend.security.JWTAuthenticationFilter;
 import com.systems.backend.security.JwtAuthEntryPoint;
@@ -39,15 +42,16 @@ public class SecurityConfig {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .authorizeHttpRequests(authorizeRequests -> {
-                    authorizeRequests
-                            .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
-                            .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()
-                            .requestMatchers(HttpMethod.DELETE, "/api/accounts/**").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
-                            .anyRequest()
-                            .authenticated();
+                    authorizeRequests.anyRequest().permitAll();
+                            // .requestMatchers(HttpMethod.GET,"api/documents").permitAll()
+                            // .requestMatchers(HttpMethod.GET, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.POST, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.PUT, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.DELETE, "/api/accounts/**").permitAll()
+                            // .requestMatchers(HttpMethod.POST, "/api/roles").permitAll()
+                            // .requestMatchers(HttpMethod.GET,"/api/documents/**").permitAll()
+                            // .anyRequest()
+                            // .authenticated();
                 })
                 .authenticationProvider(authenticationProvider())
                 .httpBasic(AbstractHttpConfigurer::disable);
@@ -79,5 +83,14 @@ public class SecurityConfig {
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
+    }
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Disable SerializationFeature.FAIL_ON_EMPTY_BEANS
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
     }
 }
