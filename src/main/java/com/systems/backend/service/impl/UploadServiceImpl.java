@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -23,21 +24,26 @@ public class UploadServiceImpl implements UploadService {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String filePath = uploadDir + originalFilename;
+        String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8.name());
+        String filePath = uploadDir + encodedFilename;
+
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(file.getBytes());
         }
+        if (originalFilename.endsWith(".pdf")) {
+            File pdfFile = new File(filePath);
+            PDDocument document = PDDocument.load(pdfFile);
+            PDFRenderer renderer = new PDFRenderer(document);
 
-        File pdfFile = new File(filePath);
-        PDDocument document = PDDocument.load(pdfFile);
-        PDFRenderer renderer = new PDFRenderer(document);
+            BufferedImage image = renderer.renderImageWithDPI(0, 300); // Render trang đầu tiên
+            String thumbnailPath = uploadDir + encodedFilename + ".png";
+            ImageIO.write(image, "PNG", new File(thumbnailPath));
 
-        BufferedImage image = renderer.renderImageWithDPI(0, 300);
-        String thumbnailPath = uploadDir + "thumbnail_" + originalFilename + ".png";
-        ImageIO.write(image, "PNG", new File(thumbnailPath));
+            document.close();
 
-        document.close();
-
-        return new UploadResult(filePath, thumbnailPath);
+            return new UploadResult(filePath, thumbnailPath);
+        } else {
+            return new UploadResult(filePath, null);
+        }
     }
 }

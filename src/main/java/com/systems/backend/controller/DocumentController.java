@@ -67,10 +67,10 @@ public class DocumentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Document createDocument(@RequestBody CreateDocumentRequest createDocumentRequest, 
-    @RequestParam("file") MultipartFile file) throws Exception{
-        // return documentService.createDocument(createDocumentRequest);
-        
+    public Document createDocument(
+        @RequestPart("file") MultipartFile file,
+        @RequestPart("data") CreateDocumentRequest createDocumentRequest
+    ) throws Exception {
         UploadResult uploadResult = uploadService.processFile(file);
         createDocumentRequest.setContent(uploadResult.getOriginalFilePath());
         createDocumentRequest.setThumbnail(uploadResult.getThumbnailFilePath());
