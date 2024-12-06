@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CreateDocumentRequest {
     @NotBlank(message = "Status is required!")
     private Short status;
-    private LocalDateTime creaetAt;
+    private LocalDateTime createAt;
     private LocalDateTime updateAt;
     @NotBlank(message = "Thumbnail is required!")
     private String thumbnail;
@@ -26,4 +26,5 @@ public class CreateDocumentRequest {
     private Long categoryId;
     @NotBlank(message = "Content is required!")
     private String content;
+    private String description;
 }

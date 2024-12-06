@@ -114,13 +114,15 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
+    // @Bean
+    // public ObjectMapper objectMapper() {
+    //     ObjectMapper objectMapper = new ObjectMapper();
 
-        // Disable SerializationFeature.FAIL_ON_EMPTY_BEANS
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper;
-    }
+    //     // Disable SerializationFeature.FAIL_ON_EMPTY_BEANS
+    //     objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    //     objectMapper.registerModule(new JavaTimeModule());
+    //     objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    //     objectMapper.enable(SerializationFeature.WRITE_SELF_REFERENCES_AS_NULL);
+    //     return objectMapper;
+    // }
 }

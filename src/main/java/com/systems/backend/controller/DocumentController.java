@@ -1,8 +1,10 @@
 package com.systems.backend.controller;
 
+import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Document;
 import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.requests.PaginationRequest;
+import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.DocumentService;
 import com.systems.backend.service.UploadService;
 import com.systems.backend.utils.UploadResult;
@@ -24,43 +26,30 @@ public class DocumentController {
     private DocumentService documentService;
 
     @Autowired
+    private DocumentMapper documentMapper;
+  
+    @Autowired
     private UploadService uploadService;
     
-    // @GetMapping
-    // @ResponseStatus(HttpStatus.OK)
-    // @ResponseBody
-    // public Page<Document> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
-        
-    //     int page = pageRequest.getPage() >= 0 ? pageRequest.getPage() : 0;
-    //     int size = pageRequest.getSize() >= 1 ? pageRequest.getSize() : 3;
-    //     String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
-    //     String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
-        
-    //     Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-
-    //     Pageable pageable = PageRequest.of(page, size, sort);
-
-    //     return documentService.getAllDocuments(pageable);
-    // }
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Page<Document> getAllDocuments(
-            @RequestParam(required = false) int page, 
-            @RequestParam(required = false) int size, 
-            @RequestParam(required = false) String sortBy, 
-            @RequestParam(required = false) String sortDirection) {
+    public Page<DocumentResponse> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
+        Pageable pageable;
+        if (pageRequest == null) {
+            pageable = PageRequest.of(0, 6);
+        } else {
+            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
+            int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
+            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
+            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+
+            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            pageable = PageRequest.of(page, size, sort);
+        }
+        Page<Document> documentPage = documentService.getAllDocuments(pageable);
         
-        // Kiểm tra các giá trị đầu vào và khởi tạo các giá trị mặc định
-        page = page >= 0 ? page : 0;  // đảm bảo page không âm
-        size = size >= 1 ? size : 5;  // đảm bảo size không nhỏ hơn 1
-
-        Sort sort = sortDirection.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        // Trả về dữ liệu phân trang từ service
-        return documentService.getAllDocuments(pageable);
+        return documentMapper.toDTOPage(documentPage);
     }
 
 
@@ -80,8 +69,9 @@ public class DocumentController {
     @GetMapping("{documentId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Document getDocument(@PathVariable(name = "documentId") Long documentId) {
-        return documentService.getDocumentById(documentId);
+    public DocumentResponse getDocument(@PathVariable(name = "documentId") Long documentId) {
+        Document document = documentService.getDocumentById(documentId);
+        return documentMapper.toDTO(document);
     }
 
     @RequestMapping(value = "{documentId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})

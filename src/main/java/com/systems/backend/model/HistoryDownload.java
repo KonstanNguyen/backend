@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serial;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -48,5 +50,6 @@ public class HistoryDownload {
     private HistoryDownloadId historyDownloadId;
 
     @Column(name = "date", nullable = false)
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime date;
 }

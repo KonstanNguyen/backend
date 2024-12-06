@@ -83,6 +83,7 @@ public class DocumentServiceImpl implements DocumentService {
                 .category(category)
                 .thumbnail(createDocumentRequest.getThumbnail())
                 .content(createDocumentRequest.getContent())
+                .description(createDocumentRequest.getDescription())
                 .build();
         return documentRepository.save(document);
     }

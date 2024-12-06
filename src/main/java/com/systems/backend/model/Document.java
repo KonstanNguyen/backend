@@ -5,11 +5,16 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -39,8 +44,15 @@ public class Document {
     private String title;
 
     @Lob
-    @Column(name = "content")
     private String content;
+
+    @Lob
+    @Column(name ="description")
+    private String description;
+
+    @ColumnDefault("0")
+    @Column(name ="views")
+    private int views;
 
     @ColumnDefault("0")
     @Column(name = "status", nullable = false)
@@ -48,17 +60,18 @@ public class Document {
 
     @ColumnDefault("getdate()")
     @Column(name = "create_at", nullable = false)
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime createAt;
 
     @ColumnDefault("getdate()")
     @Column(name = "update_at", nullable = false)
+    @JsonFormat(pattern="HH:mm:ss dd-MM-yyyy")
     private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "historyDownloadId.document", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Collection<HistoryDownload> historyDownloads;
 
     @OneToMany(mappedBy = "ratingId.document", fetch = FetchType.LAZY)
-    @JsonIgnore
     private Collection<Rating> ratings;
+
 }
