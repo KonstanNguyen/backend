@@ -37,12 +37,12 @@ public class DocumentController {
     public Page<DocumentResponse> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
         Pageable pageable;
         if (pageRequest == null) {
-            pageable = PageRequest.of(0, 6);
+            pageable = PageRequest.of(0, 6, Sort.by("createAt").descending());
         } else {
             int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
             int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
-            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
-            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "createAt";
+            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "desc";
 
             Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
             pageable = PageRequest.of(page, size, sort);

@@ -1,10 +1,7 @@
 package com.systems.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
-
 import java.util.Collection;
 
 @Entity
@@ -23,12 +20,10 @@ public class Account {
     private String username;
 
     @Column(name = "password", nullable = false)
-    @JsonIgnore
     private String password;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @JsonManagedReference
     private DocUser user;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)

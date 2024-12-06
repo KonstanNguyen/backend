@@ -5,16 +5,17 @@ import com.systems.backend.requests.LoginRequest;
 import com.systems.backend.requests.RegisterRequest;
 import com.systems.backend.responses.LoginResponse;
 import com.systems.backend.responses.RegisterResponse;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface AccountService {
     Boolean existsByUsername(String username);
     Account getAccountById(Long id);
     Account getAccountByUsername(String username);
-    List<Account> getAllAccounts();
+    Page<Account> getAllAccounts(Pageable pageable);
     Account createAccount(Account account);
     Account updateAccount(Long accountId, Account account);
     void deleteAccount(Long id);

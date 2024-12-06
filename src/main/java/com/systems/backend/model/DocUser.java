@@ -1,6 +1,5 @@
 package com.systems.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.*;
@@ -44,6 +43,5 @@ public class DocUser {
     private String email;
 
     @OneToOne(mappedBy = "user")
-    @JsonBackReference
     private Account account;
 }
