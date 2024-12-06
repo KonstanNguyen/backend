@@ -1,6 +1,9 @@
 package com.systems.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Nationalized;
@@ -12,6 +15,7 @@ import java.util.Collection;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "roleId")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +30,7 @@ public class Role {
     @Column(name = "description")
     private String description;
 
-    @JsonIgnore
+    // @JsonIgnore
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Collection<Account> accounts;
 }
