@@ -6,6 +6,8 @@ import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.DocumentService;
+import com.systems.backend.service.UploadService;
+import com.systems.backend.utils.UploadResult;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/documents")
@@ -23,6 +27,9 @@ public class DocumentController {
 
     @Autowired
     private DocumentMapper documentMapper;
+  
+    @Autowired
+    private UploadService uploadService;
     
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -45,10 +52,17 @@ public class DocumentController {
         return documentMapper.toDTOPage(documentPage);
     }
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Document createDocument(@RequestBody CreateDocumentRequest createDocumentRequest) {
+    public Document createDocument(
+        @RequestPart("file") MultipartFile file,
+        @RequestPart("data") CreateDocumentRequest createDocumentRequest
+    ) throws Exception {
+        UploadResult uploadResult = uploadService.processFile(file);
+        createDocumentRequest.setContent(uploadResult.getOriginalFilePath());
+        createDocumentRequest.setThumbnail(uploadResult.getThumbnailFilePath());
         return documentService.createDocument(createDocumentRequest);
     }
 

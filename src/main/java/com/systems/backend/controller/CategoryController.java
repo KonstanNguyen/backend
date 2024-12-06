@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired

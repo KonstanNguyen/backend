@@ -1,30 +1,64 @@
 package com.systems.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import com.systems.backend.service.UploadService;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/upload")
 public class UploadController {
-    @Autowired
-    private UploadService uploadService;
+    @Value("${upload.dir}")
+    private String uploadDir;
 
-    @PostMapping
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    @GetMapping("/thumbnail/{filename}")
+    public ResponseEntity<Resource> getThumbnail(@PathVariable String filename)
+            throws MalformedURLException, FileNotFoundException {
         try {
-            uploadService.processFile(file);
+            Path filePath = Paths.get(uploadDir).resolve(filename); 
+            Resource resource = new UrlResource(filePath.toUri());
 
-            return ResponseEntity.ok("Save file success!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error upload file: " + e.getMessage());
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_PNG)
+                        .body(resource);
+            } else {
+                throw new FileNotFoundException("File thumbnail không tồn tại: " + filePath.toString());
+            }
+        } catch (FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ByteArrayResource(("Không tìm thấy file: " + filename).getBytes()));
+        }
+    }
+
+    @GetMapping("/content/{filename}")
+    public ResponseEntity<Resource> getContent(@PathVariable String filename)
+            throws MalformedURLException, FileNotFoundException {
+        try {
+            Path filePath = Paths.get(uploadDir).resolve(filename); // Đường dẫn đến file content
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .body(resource);
+            } else {
+                throw new FileNotFoundException("File content không tồn tại: " + filePath.toString());
+            }
+        } catch (FileNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ByteArrayResource(("Không tìm thấy file: " + filename).getBytes()));
         }
     }
 }
