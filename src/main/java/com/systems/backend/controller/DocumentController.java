@@ -1,8 +1,10 @@
 package com.systems.backend.controller;
 
+import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Document;
 import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.requests.PaginationRequest;
+import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.DocumentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +20,29 @@ import org.springframework.web.bind.annotation.*;
 public class DocumentController {
     @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    private DocumentMapper documentMapper;
     
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Page<Document> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
-        if(pageRequest == null) {
-            Pageable pageable = PageRequest.of(0, 6);
-            return documentService.getAllDocuments(pageable);
+    public Page<DocumentResponse> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
+        Pageable pageable;
+        if (pageRequest == null) {
+            pageable = PageRequest.of(0, 6);
+        } else {
+            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
+            int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
+            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
+            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+
+            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            pageable = PageRequest.of(page, size, sort);
         }
-
-        int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
-        int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 3;
-        String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
-        String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+        Page<Document> documentPage = documentService.getAllDocuments(pageable);
         
-        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        return documentService.getAllDocuments(pageable);
+        return documentMapper.toDTOPage(documentPage);
     }
 
     @PostMapping
@@ -50,8 +55,9 @@ public class DocumentController {
     @GetMapping("{documentId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Document getDocument(@PathVariable(name = "documentId") Long documentId) {
-        return documentService.getDocumentById(documentId);
+    public DocumentResponse getDocument(@PathVariable(name = "documentId") Long documentId) {
+        Document document = documentService.getDocumentById(documentId);
+        return documentMapper.toDTO(document);
     }
 
     @RequestMapping(value = "{documentId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})

@@ -1,6 +1,8 @@
 package com.systems.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -19,6 +21,7 @@ public class DocUser {
     @Column(name = "user_id", nullable = false)
     private Long id;
 
+    @JsonFormat(pattern="dd-MM-yyyy")
     @Column(name = "dateOfBirth", nullable = false)
     private LocalDate dateOfBirth;
 
