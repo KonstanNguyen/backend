@@ -24,7 +24,8 @@ public class UploadServiceImpl implements UploadService {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8.name());
+        String sanitizedFilename = originalFilename.replaceAll("\\s+", "_"); // Thay khoảng trắng bằng _
+        String encodedFilename = URLEncoder.encode(sanitizedFilename, StandardCharsets.UTF_8.toString());
         String filePath = uploadDir + encodedFilename;
 
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
