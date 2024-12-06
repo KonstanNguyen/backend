@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-    List<Document> findByCategory(Category category);
+    Page<Document> findByCategory(Category category, Pageable page);
     Page<Document> findByAuthor(DocUser author, Pageable pageable);
     List<Document> findByTitleContaining(String keywords);
     List<Document> findByStatus(Short status);

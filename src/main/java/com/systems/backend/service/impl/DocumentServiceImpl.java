@@ -36,8 +36,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> gettDocumentByCategory(Category category) {
-        return documentRepository.findByCategory(category);
+    public Page<Document> gettDocumentByCategory(Category category, Pageable pageable) {
+        return documentRepository.findByCategory(category, pageable);
     }
 
     @Override
