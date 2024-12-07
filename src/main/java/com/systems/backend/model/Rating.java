@@ -1,20 +1,27 @@
 package com.systems.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.validator.constraints.Range;
 
 import java.io.Serial;
 import java.util.Objects;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Rating {
-    @Getter
-    @Setter
+    @Data
+    @Builder
     @Embeddable
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class RatingId implements java.io.Serializable {
         @Serial
         private static final long serialVersionUID = 5569649995966803905L;
@@ -45,6 +52,7 @@ public class Rating {
     @EmbeddedId
     private RatingId ratingId;
 
+    @Range(min = 1, max = 5, message = "Rate is incorrect")
     @Column(name = "rate", nullable = false)
     private Short rate;
 

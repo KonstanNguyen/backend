@@ -5,9 +5,15 @@ import com.systems.backend.model.Document;
 import com.systems.backend.requests.CreateDocumentRequest;
 import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.responses.DocumentResponse;
+import com.systems.backend.responses.HistoryDownloadResponse;
+import com.systems.backend.responses.RatingResponse;
 import com.systems.backend.service.DocumentService;
+import com.systems.backend.service.HistoryDownloadService;
+import com.systems.backend.service.RatingService;
 import com.systems.backend.service.UploadService;
 import com.systems.backend.utils.UploadResult;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,12 +29,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class DocumentController {
     @Autowired
     private DocumentService documentService;
+ 
+    @Autowired
+    private UploadService uploadService;
+    
+    @Autowired
+    private RatingService ratingService;
+
+    @Autowired
+    private HistoryDownloadService historyDownloadService;
 
     @Autowired
     private DocumentMapper documentMapper;
-  
-    @Autowired
-    private UploadService uploadService;
     
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -69,7 +80,7 @@ public class DocumentController {
     @GetMapping("{documentId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public DocumentResponse getDocument(@PathVariable(name = "documentId") Long documentId) {
+    public DocumentResponse getDocument(@PathVariable Long documentId) {
         Document document = documentService.getDocumentById(documentId);
         return documentMapper.toDTO(document);
     }
@@ -77,15 +88,27 @@ public class DocumentController {
     @RequestMapping(value = "{documentId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Document updateDocument(@PathVariable(name = "documentId") Long documentId, @RequestBody Document document) {
+    public Document updateDocument(@PathVariable Long documentId, @RequestBody Document document) {
         return documentService.updateDocument(documentId, document);
     }
 
 
     @DeleteMapping("{documentId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDocument(@PathVariable(name = "documentId") Long documentId) {
+    public void deleteDocument(@PathVariable Long documentId) {
         documentService.deleteDocument(documentId);
     }
 
+    @GetMapping("{documentId}/ratings")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<RatingResponse> getRatingsByDocument(@PathVariable Long documentId) {
+        return ratingService.getRatingByDocumentId(documentId);
+    }
+
+    @GetMapping("{documentId}/list-account")
+    @ResponseStatus(HttpStatus.OK)
+    public List<HistoryDownloadResponse> getHistoryByDocumentId(@PathVariable Long documentId) {
+        return historyDownloadService.getHistoryByDocumentId(documentId);
+    }
 }

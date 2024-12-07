@@ -1,17 +1,17 @@
 package com.systems.backend.controller;
 
 import com.systems.backend.mapper.AccountMapper;
-import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Account;
-import com.systems.backend.model.Document;
 import com.systems.backend.requests.LoginRequest;
 import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.requests.RegisterRequest;
 import com.systems.backend.responses.AccountResponse;
 import com.systems.backend.responses.ApiResponse;
-import com.systems.backend.responses.DocumentResponse;
+import com.systems.backend.responses.HistoryDownloadResponse;
 import com.systems.backend.service.AccountService;
-import com.systems.backend.service.DocumentService;
+import com.systems.backend.service.HistoryDownloadService;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,9 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -31,13 +28,10 @@ public class AccountController {
     private AccountService accountService;
 
     @Autowired
-    private DocumentService documentService;
-
-    @Autowired
     private AccountMapper accountMapper;
 
     @Autowired
-    private DocumentMapper documentMapper;
+    private HistoryDownloadService historyDownloadService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -70,7 +64,7 @@ public class AccountController {
     @GetMapping("{accountId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public AccountResponse getAccount(@PathVariable(name = "accountId") Long accountId) {
+    public AccountResponse getAccount(@PathVariable Long accountId) {
         Account account = accountService.getAccountById(accountId);
         return accountMapper.toDTO(account);
     }
@@ -80,14 +74,14 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Account updateAccount(
-            @PathVariable(name = "accountId") Long accountId,
+            @PathVariable Long accountId,
             @RequestBody Account account) {
         return accountService.updateAccount(accountId, account);
     }
 
     @DeleteMapping("{accountId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAccount(@PathVariable(name = "accountId") Long accountId) {
+    public void deleteAccount(@PathVariable Long accountId) {
         accountService.deleteAccount(accountId);
     }
 
@@ -116,7 +110,7 @@ public class AccountController {
     @GetMapping("getUserIdByUsername/{username}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ApiResponse<Object> getUserIdByUsername(@PathVariable("username") String username) {
+    public ApiResponse<Object> getUserIdByUsername(@PathVariable String username) {
         Account account = accountService.getAccountByUsername(username);
 
         return ApiResponse.builder()
@@ -124,5 +118,11 @@ public class AccountController {
                 .message("User ID fetched successfully")
                 .code(HttpStatus.OK.value())
                 .build();
+    }
+
+    @GetMapping("{accountId}/history-download")
+    @ResponseStatus(HttpStatus.OK)
+    public List<HistoryDownloadResponse> getHistoryByAccountId(@PathVariable Long accountId) {
+        return historyDownloadService.getHistoryByAccountId(accountId);
     }
 }
