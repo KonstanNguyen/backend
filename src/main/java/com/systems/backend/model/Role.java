@@ -25,7 +25,7 @@ public class Role {
     @Column(name = "description")
     private String description;
 
-    // @JsonIgnore
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Collection<Account> accounts;
 }
