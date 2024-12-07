@@ -1,13 +1,24 @@
 package com.systems.backend.controller;
 
+import com.systems.backend.mapper.AccountMapper;
+import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Account;
+import com.systems.backend.model.Document;
 import com.systems.backend.requests.LoginRequest;
+import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.requests.RegisterRequest;
+import com.systems.backend.responses.AccountResponse;
 import com.systems.backend.responses.ApiResponse;
+import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.AccountService;
+import com.systems.backend.service.DocumentService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +28,36 @@ import java.util.List;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+    
+    @Autowired
+    private DocumentService documentService;
+
+    @Autowired
+    private AccountMapper accountMapper;
+
+    @Autowired
+    private DocumentMapper documentMapper;
+
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public List<Account> getAllAccounts() {
-        return accountService.getAllAccounts();
+    public Page<AccountResponse> getAllAccounts(@RequestBody(required = false) PaginationRequest pageRequest) {
+        Pageable pageable;
+        if (pageRequest == null) {
+            pageable = PageRequest.of(0,6, Sort.by("username").ascending());
+        } else {
+            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
+            int size = pageRequest.getSize() > 0 ? pageRequest.getSize() : 10;
+            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "username";
+            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+
+            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() :Sort.by(sortBy).descending();
+            pageable =PageRequest.of(page,size,sort);
+        }
+
+        Page<Account> accountPage = accountService.getAllAccounts(pageable);
+        return accountMapper.toDTOPage(accountPage);
     }
 
     @PostMapping
@@ -35,8 +70,9 @@ public class AccountController {
     @GetMapping("{accountId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Account getAccount(@PathVariable(name = "accountId") Long accountId) {
-        return accountService.getAccountById(accountId);
+    public AccountResponse getAccount(@PathVariable(name = "accountId") Long accountId) {
+        Account account = accountService.getAccountById(accountId);
+        return accountMapper.toDTO(account);
     }
 
     @RequestMapping(value = "{accountId}/update", method = { RequestMethod.PUT, RequestMethod.POST,
@@ -76,15 +112,4 @@ public class AccountController {
                 .code(HttpStatus.OK.value())
                 .build();
     }
-
-    // @PostMapping("/logout")
-    // @ResponseStatus(HttpStatus.OK)
-    // @ResponseBody
-    // public ApiResponse<?> logout() {
-    //
-    // return ApiResponse.builder()
-    // .message("Logout successful")
-    // .code(HttpStatus.OK.value())
-    // .build();
-    // }
 }

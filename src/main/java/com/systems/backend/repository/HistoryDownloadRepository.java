@@ -1,5 +1,6 @@
 package com.systems.backend.repository;
 
+import com.systems.backend.model.Account;
 import com.systems.backend.model.HistoryDownload;
 
 import java.util.List;
