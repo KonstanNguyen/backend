@@ -1,8 +1,7 @@
 package com.systems.backend.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.Hibernate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -11,12 +10,12 @@ import java.io.Serial;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name = "History_Download")
 public class HistoryDownload {
     @Embeddable
+    @Data
     public static class HistoryDownloadId implements java.io.Serializable {
         @Serial
         private static final long serialVersionUID = 7789561099938143923L;

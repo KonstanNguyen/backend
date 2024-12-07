@@ -2,11 +2,9 @@ package com.systems.backend.requests;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class LoginRequest extends ApiRequest {
+public class LoginRequest  {
     @NotBlank(message = "Username is required!")
     public String username;
     @NotBlank(message = "Password is required!")

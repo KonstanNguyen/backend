@@ -15,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Category;
-import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 import com.systems.backend.requests.CreateCategoryRequest;
 import com.systems.backend.requests.PaginationRequest;
@@ -23,7 +22,6 @@ import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.CategoryService;
 import com.systems.backend.service.DocumentService;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,7 +62,7 @@ public class CategoryController {
     @GetMapping("{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Category getCategory(@PathVariable(name="categoryId") Long categoryId) {
+    public Category getCategory(@PathVariable Long categoryId) {
         return categoryService.getCategoryById(categoryId);
     }
 
@@ -72,13 +70,13 @@ public class CategoryController {
     @RequestMapping(value="{categoryId}/update", method ={RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Category updateCategory(@PathVariable(name = "categoryId") Long categoryId, @RequestBody Category Category) {
+    public Category updateCategory(@PathVariable Long categoryId, @RequestBody Category Category) {
         return categoryService.updateCategory(categoryId, Category);
     }
     
     @DeleteMapping("{categoryId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable(name = "categoryId") Long categoryId) {
+    public void deleteCategory(@PathVariable Long categoryId) {
         categoryService.deleteCategory(categoryId);
     }
 

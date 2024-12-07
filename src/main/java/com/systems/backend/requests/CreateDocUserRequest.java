@@ -5,15 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 @Data
-@EqualsAndHashCode(callSuper=true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateDocUserRequest extends ApiRequest {
+public class CreateDocUserRequest {
     @NotBlank(message = "Name is required!")
     private String name;
     @NotBlank(message = "Email is required!")

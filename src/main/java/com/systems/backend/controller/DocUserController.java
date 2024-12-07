@@ -4,7 +4,6 @@ import com.systems.backend.mapper.DocUserMapper;
 import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
-import com.systems.backend.repository.DocumentRepository;
 import com.systems.backend.requests.CreateDocUserRequest;
 import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.responses.DocUserResponse;

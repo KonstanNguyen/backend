@@ -1,7 +1,6 @@
 package com.systems.backend.service.impl;
 
 import com.systems.backend.model.Account;
-import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Role;
 import com.systems.backend.repository.AccountRepository;
 import com.systems.backend.repository.RoleRepository;
