@@ -4,6 +4,7 @@ import com.systems.backend.mapper.AccountMapper;
 import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Account;
 import com.systems.backend.model.Document;
+import com.systems.backend.model.Role;
 import com.systems.backend.requests.LoginRequest;
 import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.requests.RegisterRequest;
@@ -12,6 +13,7 @@ import com.systems.backend.responses.ApiResponse;
 import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.AccountService;
 import com.systems.backend.service.DocumentService;
+import com.systems.backend.service.RoleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,9 @@ public class AccountController {
 
     @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private AccountMapper accountMapper;
@@ -122,6 +127,19 @@ public class AccountController {
         return ApiResponse.builder()
                 .data(account.getId())
                 .message("User ID fetched successfully")
+                .code(HttpStatus.OK.value())
+                .build();
+    }
+
+    @GetMapping("getRoleById/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ApiResponse<Object> getRoleById(@PathVariable("accountId") Long accountId) {
+        List<Role> role = roleService.getRoleByAccountId(accountId);
+
+        return ApiResponse.builder()
+                .data(role)
+                .message("Role fetched successfully")
                 .code(HttpStatus.OK.value())
                 .build();
     }
