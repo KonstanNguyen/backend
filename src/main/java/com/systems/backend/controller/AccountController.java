@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-    
+
     @Autowired
     private DocumentService documentService;
 
@@ -38,22 +39,21 @@ public class AccountController {
     @Autowired
     private DocumentMapper documentMapper;
 
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Page<AccountResponse> getAllAccounts(@RequestBody(required = false) PaginationRequest pageRequest) {
         Pageable pageable;
         if (pageRequest == null) {
-            pageable = PageRequest.of(0,6, Sort.by("username").ascending());
+            pageable = PageRequest.of(0, 6, Sort.by("username").ascending());
         } else {
             int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
             int size = pageRequest.getSize() > 0 ? pageRequest.getSize() : 10;
             String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "username";
             String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
 
-            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() :Sort.by(sortBy).descending();
-            pageable =PageRequest.of(page,size,sort);
+            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+            pageable = PageRequest.of(page, size, sort);
         }
 
         Page<Account> accountPage = accountService.getAllAccounts(pageable);
@@ -109,6 +109,19 @@ public class AccountController {
         return ApiResponse.builder()
                 .data(accountService.registerAccount(registerRequest))
                 .message("Account successfully registered!")
+                .code(HttpStatus.OK.value())
+                .build();
+    }
+
+    @GetMapping("getUserIdByUsername/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ApiResponse<Object> getUserIdByUsername(@PathVariable("username") String username) {
+        Account account = accountService.getAccountByUsername(username);
+
+        return ApiResponse.builder()
+                .data(account.getId())
+                .message("User ID fetched successfully")
                 .code(HttpStatus.OK.value())
                 .build();
     }
