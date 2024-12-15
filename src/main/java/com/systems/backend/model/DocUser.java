@@ -1,6 +1,7 @@
 package com.systems.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,8 @@ import org.hibernate.annotations.Nationalized;
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,6 +44,6 @@ public class DocUser {
     @Column(name = "email", length = 100)
     private String email;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Account account;
 }

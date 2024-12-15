@@ -49,7 +49,7 @@ public class DocumentController {
             @RequestParam(name = "size", defaultValue = "9") int size,
             @RequestParam(name = "sortBy", defaultValue = "createAt") String sortBy,
             @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
-            @RequestParam(name = "status", required = false) Short status) {
+            @RequestParam(name = "status") Short status) {
 
         Sort sort = sortDirection.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
@@ -58,7 +58,7 @@ public class DocumentController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Document> documentPage;
-        if (status != null) {
+        if (status == 1) {
             documentPage = documentService.getDocumentsByStatus(status, pageable);
         } else {
             documentPage = documentService.getAllDocuments(pageable);

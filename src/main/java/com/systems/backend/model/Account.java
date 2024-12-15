@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "account")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

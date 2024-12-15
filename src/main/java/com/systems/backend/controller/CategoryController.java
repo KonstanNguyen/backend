@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -82,29 +83,25 @@ public class CategoryController {
 
     @GetMapping("{categoryId}/documents")
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
     public Page<DocumentResponse> getDocumentsByCategory(
-        @PathVariable(name ="categoryId") Long categoryId,
-        @RequestBody(required = false) PaginationRequest pageRequest) {
-        Pageable pageable;
-        if (pageRequest == null) {
-            pageable = PageRequest.of(0, 6, Sort.by("createAt").descending());
-        } else {
-            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
-            int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
-            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "createAt";
-            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "desc";
+            @PathVariable(name ="categoryId") Long categoryId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "9") int size,
+            @RequestParam(name = "sortBy", defaultValue = "views") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
+            @RequestParam(name = "status") Short status) {
 
-            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-            pageable = PageRequest.of(page, size, sort);
-        }
+        Sort sort = sortDirection.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
         Category category = categoryService.getCategoryById(categoryId);
         if (category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found");
         }
-
         Page<Document> documentPage = documentService.gettDocumentByCategory(category, pageable);
-        
+
         return documentMapper.toDTOPage(documentPage);
     }
 }

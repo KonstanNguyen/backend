@@ -19,12 +19,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.systems.backend.model.Account;
-import com.systems.backend.model.DocUser;
 import com.systems.backend.model.Document;
 import com.systems.backend.model.HistoryDownload;
 import com.systems.backend.model.HistoryDownload.HistoryDownloadId;
 import com.systems.backend.repository.HistoryDownloadRepository;
-import com.systems.backend.responses.DocUserResponse;
 import com.systems.backend.responses.HistoryDownloadResponse;
 import com.systems.backend.service.AccountService;
 import com.systems.backend.service.DocumentService;
@@ -49,16 +47,6 @@ public class HistoryDownloadController {
 
     @Autowired
     private DocumentService documentService;
-
-    // @GetMapping
-    // public ResponseEntity<List<HistoryDownloadResponse>> getAllHistoryDownloads() {
-    //     try {
-    //         List<HistoryDownloadResponse> historyDownloads = historyDownloadService.getAllHistoryDownloads();
-    //         return ResponseEntity.ok(historyDownloads);
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    //     }
-    // }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
