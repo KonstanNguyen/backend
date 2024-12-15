@@ -19,6 +19,7 @@ public interface DocumentMapper {
     @Mapping(source = "category.name", target = "categoryName") 
     @Mapping(source = "author.name", target = "authorName")
     @Mapping(target="ratingAvg", expression = "java(calculateRatingAvg(document.getRatings()))")
+    @Mapping(source = "status", target = "status")
     DocumentResponse toDTO(Document document);
 
     default Float calculateRatingAvg(Collection<Rating> documentRatings) {

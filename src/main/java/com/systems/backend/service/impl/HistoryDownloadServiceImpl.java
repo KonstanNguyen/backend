@@ -13,6 +13,8 @@ import com.systems.backend.service.HistoryDownloadService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +33,8 @@ public class HistoryDownloadServiceImpl implements HistoryDownloadService {
     private HistoryDownloadMapper historyDownloadMapper;
 
     @Override
-    public List<HistoryDownloadResponse> getAllHistoryDownloads() {
-        return historyDownloadRepository.findAll().stream().map(
-            historyDownload -> historyDownloadMapper.toDTO(historyDownload)
-        ).toList();
+    public Page<HistoryDownload> getAllHistoryDownloads(Pageable pageable) {
+        return historyDownloadRepository.findAll(pageable);
     }
 
     @Override

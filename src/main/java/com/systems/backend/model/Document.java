@@ -67,5 +67,4 @@ public class Document {
 
     @OneToMany(mappedBy = "ratingId.document", fetch = FetchType.LAZY)
     private Collection<Rating> ratings;
-
 }

@@ -38,23 +38,19 @@ public class DocUserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public Page<DocUserResponse> getAllDocUsers( @RequestBody(required = false) PaginationRequest pageRequest) {
-        Pageable pageable;
-        if (pageRequest == null) {
-            pageable = PageRequest.of(0, 6, Sort.by("id").ascending());
-        } else {
-            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
-            int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
-            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "id";
-            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+    public Page<DocUserResponse> getAllDocUsers(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "9") int size,
+            @RequestParam(name = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection) {
 
-            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-            pageable = PageRequest.of(page, size, sort);
-        }
+        Sort sort = sortDirection.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<DocUser> docUserPage = docUserService.getAllDocUsers(pageable);
-        
         return docUserMapper.toDTOPage(docUserPage);
     }
     

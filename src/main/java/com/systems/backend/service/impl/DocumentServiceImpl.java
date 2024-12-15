@@ -46,8 +46,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> getDocumentsByStatus(Short status) {
-        return documentRepository.findByStatus(status);
+    public Page<Document> getDocumentsByStatus(Short status, Pageable pageable) {
+        return documentRepository.findByStatus(status, pageable);
     }
 
     @Override
@@ -104,14 +104,13 @@ public class DocumentServiceImpl implements DocumentService {
             throw new RuntimeException("This document is not found");
         }
 
-
-        updatedDocument.setAuthor(Optional.ofNullable(document.getAuthor()).orElse(updatedDocument.getAuthor()));
-        updatedDocument.setCategory(Optional.ofNullable(document.getCategory()).orElse(updatedDocument.getCategory()));
-        updatedDocument.setContent(Optional.ofNullable(document.getContent()).orElse(updatedDocument.getContent()));
+        // updatedDocument.setAuthor(Optional.ofNullable(document.getAuthor()).orElse(updatedDocument.getAuthor()));
+        // updatedDocument.setCategory(Optional.ofNullable(document.getCategory()).orElse(updatedDocument.getCategory()));
+        // updatedDocument.setContent(Optional.ofNullable(document.getContent()).orElse(updatedDocument.getContent()));
         updatedDocument.setStatus(Optional.ofNullable(document.getStatus()).orElse(updatedDocument.getStatus()));
-        updatedDocument.setThumbnail(Optional.ofNullable(document.getThumbnail()).orElse(updatedDocument.getThumbnail()));
-        updatedDocument.setTitle(Optional.ofNullable(document.getTitle()).orElse(updatedDocument.getTitle()));
-        updatedDocument.setUpdateAt(LocalDateTime.now());
+        // updatedDocument.setThumbnail(Optional.ofNullable(document.getThumbnail()).orElse(updatedDocument.getThumbnail()));
+        // updatedDocument.setTitle(Optional.ofNullable(document.getTitle()).orElse(updatedDocument.getTitle()));
+        // updatedDocument.setUpdateAt(LocalDateTime.now());
 
         return documentRepository.save(updatedDocument);
         

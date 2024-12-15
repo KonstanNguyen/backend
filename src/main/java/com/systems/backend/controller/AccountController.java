@@ -9,6 +9,7 @@ import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.requests.RegisterRequest;
 import com.systems.backend.responses.AccountResponse;
 import com.systems.backend.responses.ApiResponse;
+import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.responses.HistoryDownloadResponse;
 import com.systems.backend.service.AccountService;
 import com.systems.backend.service.DocumentService;
@@ -45,20 +46,17 @@ public class AccountController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public Page<AccountResponse> getAllAccounts(@RequestBody(required = false) PaginationRequest pageRequest) {
-        Pageable pageable;
-        if (pageRequest == null) {
-            pageable = PageRequest.of(0, 6, Sort.by("username").ascending());
-        } else {
-            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
-            int size = pageRequest.getSize() > 0 ? pageRequest.getSize() : 10;
-            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "username";
-            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "asc";
+    public Page<AccountResponse> getAllAccounts(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "9") int size,
+            @RequestParam(name = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection) {
 
-            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-            pageable = PageRequest.of(page, size, sort);
-        }
+        Sort sort = sortDirection.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Account> accountPage = accountService.getAllAccounts(pageable);
         return accountMapper.toDTOPage(accountPage);

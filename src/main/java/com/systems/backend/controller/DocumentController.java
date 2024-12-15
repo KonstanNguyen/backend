@@ -29,10 +29,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class DocumentController {
     @Autowired
     private DocumentService documentService;
- 
+
     @Autowired
     private UploadService uploadService;
-    
+
     @Autowired
     private RatingService ratingService;
 
@@ -41,36 +41,37 @@ public class DocumentController {
 
     @Autowired
     private DocumentMapper documentMapper;
-    
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public Page<DocumentResponse> getAllDocuments(@RequestBody(required = false) PaginationRequest pageRequest) {
-        Pageable pageable;
-        if (pageRequest == null) {
-            pageable = PageRequest.of(0, 6, Sort.by("createAt").descending());
-        } else {
-            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
-            int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
-            String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "createAt";
-            String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "desc";
 
-            Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-            pageable = PageRequest.of(page, size, sort);
+    @RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseStatus(HttpStatus.OK)
+    public Page<DocumentResponse> getAllDocuments(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "9") int size,
+            @RequestParam(name = "sortBy", defaultValue = "createAt") String sortBy,
+            @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
+            @RequestParam(name = "status", required = false) Short status) {
+
+        Sort sort = sortDirection.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Document> documentPage;
+        if (status != null) {
+            documentPage = documentService.getDocumentsByStatus(status, pageable);
+        } else {
+            documentPage = documentService.getAllDocuments(pageable);
         }
-        Page<Document> documentPage = documentService.getAllDocuments(pageable);
-        
         return documentMapper.toDTOPage(documentPage);
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Document createDocument(
-        @RequestPart("file") MultipartFile file,
-        @RequestPart("data") CreateDocumentRequest createDocumentRequest
-    ) throws Exception {
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("data") CreateDocumentRequest createDocumentRequest) throws Exception {
         UploadResult uploadResult = uploadService.processFile(file);
         createDocumentRequest.setContent(uploadResult.getOriginalFilePath());
         createDocumentRequest.setThumbnail(uploadResult.getThumbnailFilePath());
@@ -85,13 +86,13 @@ public class DocumentController {
         return documentMapper.toDTO(document);
     }
 
-    @RequestMapping(value = "{documentId}/update", method = {RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
+    @RequestMapping(value = "{documentId}/update", method = { RequestMethod.PUT, RequestMethod.POST,
+            RequestMethod.PATCH })
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Document updateDocument(@PathVariable Long documentId, @RequestBody Document document) {
         return documentService.updateDocument(documentId, document);
     }
-
 
     @DeleteMapping("{documentId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
