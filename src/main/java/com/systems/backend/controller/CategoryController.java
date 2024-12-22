@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
-@PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired
@@ -53,6 +52,7 @@ public class CategoryController {
         return categoryService.getAllCategory();
     }
 
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -68,7 +68,7 @@ public class CategoryController {
         return categoryService.getCategoryById(categoryId);
     }
 
-
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     @RequestMapping(value="{categoryId}/update", method ={RequestMethod.PUT, RequestMethod.POST, RequestMethod.PATCH})
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -76,6 +76,7 @@ public class CategoryController {
         return categoryService.updateCategory(categoryId, Category);
     }
     
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     @DeleteMapping("{categoryId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long categoryId) {

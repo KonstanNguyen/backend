@@ -24,7 +24,7 @@ public class CreateDocumentRequest {
     private Long authorId;
     @NotBlank(message = "Category is required!")
     private Long categoryId;
-    @NotBlank(message = "Content is required!")
+    // @NotBlank(message = "Content is required!")
     private String content;
     private String description;
 }

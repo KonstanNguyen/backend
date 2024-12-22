@@ -60,12 +60,19 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
+                    // .anyRequest().permitAll();
+                    .requestMatchers(
+                        HttpMethod.GET,
+                        "/api/documents/**"
+
+                    ).permitAll()
                             .requestMatchers(
-                                    "/api/documents",
                                     "/api/documents/{documentId}",
                                     "/api/accounts/getUserIdByUsername/{username}",
                                     "/api/accounts/login",
-                                    "/api/accounts/register"
+                                    "/api/accounts/register",
+                                    "/api/upload/**",
+                                    "/pdf/**"
                             ).permitAll()
                             .anyRequest().authenticated();
                 })

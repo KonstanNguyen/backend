@@ -59,15 +59,11 @@ public class DocumentController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<Document> documentPage;
-        if (status == 1) {
-            documentPage = documentService.getDocumentsByStatus(status, pageable);
-        } else {
-            documentPage = documentService.getAllDocuments(pageable);
-        }
+        documentPage = documentService.getDocumentsByStatus(status, pageable);
         return documentMapper.toDTOPage(documentPage);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Document createDocument(
