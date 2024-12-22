@@ -19,6 +19,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     Page<Document> findByAuthor(DocUser author, Pageable pageable);
     List<Document> findByTitleContaining(String keywords);
     Page<Document> findByStatus(Short status, Pageable page);
+    Page<Document> findByStatusAndCategory(Short status, Category category, Pageable pageable);
     List<Document> findByCreateAt(LocalDateTime createAt);
     Boolean existsByTitle(String title);
 }
