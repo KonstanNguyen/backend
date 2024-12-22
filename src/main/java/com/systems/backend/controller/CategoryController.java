@@ -89,7 +89,7 @@ public class CategoryController {
             @RequestParam(name = "size", defaultValue = "9") int size,
             @RequestParam(name = "sortBy", defaultValue = "views") String sortBy,
             @RequestParam(name = "sortDirection", defaultValue = "desc") String sortDirection,
-            @RequestParam(name = "status") Short status) {
+            @RequestParam(name = "status", defaultValue = "1") Short status) {
 
         Sort sort = sortDirection.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
@@ -100,7 +100,7 @@ public class CategoryController {
         if (category == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category not found");
         }
-        Page<Document> documentPage = documentService.gettDocumentByCategory(category, pageable);
+        Page<Document> documentPage = documentService.getDocumentsByStatusAndCategory(status, category, pageable);
 
         return documentMapper.toDTOPage(documentPage);
     }

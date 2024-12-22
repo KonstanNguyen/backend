@@ -51,6 +51,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public Page<Document> getDocumentsByStatusAndCategory(Short status, Category category, Pageable pageable) {
+        return documentRepository.findByStatusAndCategory(status, category, pageable);
+    }
+    
+
+    @Override
     public List<Document> getDocumentsByCreateAt(LocalDateTime time) {
         return documentRepository.findByCreateAt(time);
     }

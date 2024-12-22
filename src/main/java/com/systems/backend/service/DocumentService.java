@@ -18,6 +18,7 @@ public interface DocumentService {
     Page<Document> gettDocumentByCategory(Category category, Pageable pageable);
     Page<Document> getDocumentsByAuthor(DocUser author, Pageable pageable);
     Page<Document> getDocumentsByStatus(Short status, Pageable pageable);
+    Page<Document> getDocumentsByStatusAndCategory(Short status, Category category, Pageable pageable);
     List<Document> getDocumentsByCreateAt(LocalDateTime time);
     List<Document> searchDocuments(String keywords);
     Page<Document> getAllDocuments(Pageable pageable);
