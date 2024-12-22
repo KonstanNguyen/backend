@@ -2,14 +2,11 @@ package com.systems.backend.controller;
 
 import com.systems.backend.mapper.AccountMapper;
 import com.systems.backend.model.Account;
-import com.systems.backend.model.Document;
 import com.systems.backend.model.Role;
 import com.systems.backend.requests.LoginRequest;
-import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.requests.RegisterRequest;
 import com.systems.backend.responses.AccountResponse;
 import com.systems.backend.responses.ApiResponse;
-import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.responses.HistoryDownloadResponse;
 import com.systems.backend.service.AccountService;
 import com.systems.backend.service.DocumentService;
@@ -24,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,9 +29,6 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private DocumentService documentService;
 
     @Autowired
     private RoleService roleService;
@@ -62,6 +57,7 @@ public class AccountController {
         return accountMapper.toDTOPage(accountPage);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

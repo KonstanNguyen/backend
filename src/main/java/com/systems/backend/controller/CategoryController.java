@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +19,6 @@ import com.systems.backend.mapper.DocumentMapper;
 import com.systems.backend.model.Category;
 import com.systems.backend.model.Document;
 import com.systems.backend.requests.CreateCategoryRequest;
-import com.systems.backend.requests.PaginationRequest;
 import com.systems.backend.responses.DocumentResponse;
 import com.systems.backend.service.CategoryService;
 import com.systems.backend.service.DocumentService;
@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @RestController
+@PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
 @RequestMapping("/category")
 public class CategoryController {
     @Autowired

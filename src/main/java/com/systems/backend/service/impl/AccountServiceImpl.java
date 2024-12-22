@@ -112,7 +112,7 @@ public class AccountServiceImpl implements AccountService {
                 .gender(registerRequest.getGender())
                 .build();
 
-        Role userRole = roleRepository.findByName("USER")
+        Role userRole = roleRepository.findByName("user")
                 .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         Account account = Account.builder()

@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -57,6 +58,7 @@ public class DocUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     public DocUser createDocUser(@RequestBody CreateDocUserRequest createDocUserRequest) {
         return docUserService.createDocUser(createDocUserRequest);
     }
@@ -78,6 +80,7 @@ public class DocUserController {
 
     @DeleteMapping("{docUserId}/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     public void deleteDocUser(@PathVariable(name = "docUserId") Long accountId) {
         docUserService.deleteDocUser(accountId);
     }
@@ -93,7 +96,7 @@ public class DocUserController {
         if (pageRequest == null) {
             pageable = PageRequest.of(0, 6, Sort.by("createAt").descending());
         } else {
-            int page = pageRequest.getPage() > 0 ? pageRequest.getPage() : 0;
+            int page = Math.max(pageRequest.getPage(), 0);
             int size = pageRequest.getSize() > 1 ? pageRequest.getSize() : 6;
             String sortBy = pageRequest.getSortBy() != null ? pageRequest.getSortBy() : "createAt";
             String sortDir = pageRequest.getSortDirection() != null ? pageRequest.getSortDirection() : "desc";

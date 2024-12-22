@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,6 @@ import com.systems.backend.service.AccountService;
 import com.systems.backend.service.DocumentService;
 import com.systems.backend.service.HistoryDownloadService;
 import com.systems.backend.mapper.HistoryDownloadMapper;
-import java.util.Collections;
 
 
 @RestController
@@ -53,6 +53,7 @@ public class HistoryDownloadController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     public Page<HistoryDownloadResponse> getAllHistoryDownloads (
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "9") int size,

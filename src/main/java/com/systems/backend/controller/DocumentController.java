@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -107,6 +108,7 @@ public class DocumentController {
         return ratingService.getRatingByDocumentId(documentId);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin') or hasAnyAuthority('ADMIN')")
     @GetMapping("{documentId}/list-account")
     @ResponseStatus(HttpStatus.OK)
     public List<HistoryDownloadResponse> getHistoryByDocumentId(@PathVariable Long documentId) {
