@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.systems.backend.model.Account;
 import com.systems.backend.model.Document;
@@ -28,6 +29,8 @@ import com.systems.backend.service.AccountService;
 import com.systems.backend.service.DocumentService;
 import com.systems.backend.service.HistoryDownloadService;
 import com.systems.backend.mapper.HistoryDownloadMapper;
+import java.util.Collections;
+
 
 @RestController
 @CrossOrigin
@@ -88,6 +91,16 @@ public class HistoryDownloadController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Lỗi khi lưu lịch sử tải xuống: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("{accountId}")
+    public ResponseEntity<List<HistoryDownloadResponse>> getHistoryByAccountId(@PathVariable Long accountId) {
+        try {
+            List<HistoryDownloadResponse> historyDownloads = historyDownloadService.getHistoryByAccountId(accountId);
+            return ResponseEntity.ok(historyDownloads);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
